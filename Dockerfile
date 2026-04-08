@@ -1,19 +1,7 @@
-FROM python:3.10
-
-
-ENV PYTHONUNBUFFERED=1
-
+FROM python:3.10-slim
 WORKDIR /app
-
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-
 COPY . .
-
-
-EXPOSE 7860
-
-
-CMD ["python","-u", "inference.py"]
+RUN pip install --no-cache-dir fastapi uvicorn numpy openai pydantic openenv-core
+ENV PYTHONUNBUFFERED=1
+ENV PORT=7860
+CMD ["python", "-u", "inference.py"]
