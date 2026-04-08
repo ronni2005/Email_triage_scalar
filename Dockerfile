@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 7860
 
 
-CMD ["python", "inference.py"]
+CMD ["python", "app.py"]
