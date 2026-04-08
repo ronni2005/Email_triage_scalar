@@ -1,31 +1,27 @@
+import os
+from openai import OpenAI
+
 class SmartEmailAgent:
-    def predict(self, obs):
-        emails = obs.emails if hasattr(obs, 'emails') else obs
-        unhandled = [(i, e) for i, e in enumerate(obs) if e[3] == 0]
+    def __init__(self):
+      
+        self.client = OpenAI(
+            base_url=os.getenv("API_BASE_URL", "https://api.openai.com/v1"),
+            api_key=os.getenv("HF_TOKEN")
+        )
+        self.model = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
 
-        if not unhandled:
-            return 4
-
-       
-        idx, email = min(unhandled, key=lambda x: x[1][1])
-
-        e_type, deadline, length, _ = email
-
-        urgency = max(0, min(1, (10 - deadline) / 10))
-
-       
-        if e_type == 0:
-            return 0
-
+    def predict(self, observation):
+        try:
+           
+            prompt = f"Given this email state, choose action (0: Archive, 1: Reply, 2: Forward, 3: Flag): {observation}"
+            
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=5
+            )
         
-        elif e_type == 2:
-            if urgency > 0.6:
-                return 1
-            else:
-                return 3
-
-        
-        elif e_type == 1:
-            return 2
-
-        return 4
+            res_text = response.choices[0].message.content.strip()
+            return int(''.join(filter(str.isdigit, res_text)) or 0)
+        except Exception:
+            return 0 
