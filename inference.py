@@ -34,8 +34,7 @@ def reset():
     rewards_list = []
     
     
-    print(f"[START] task={TASK_NAME} env={BENCHMARK} model={MODEL_NAME}", file=sys.stdout, flush=True)
-    sys.stdout.flush()
+    print(f"[START] task={TASK_NAME} env={BENCHMARK} model={MODEL_NAME}", flush=True)
     
     return env.reset()
 
@@ -49,26 +48,29 @@ def step(action_input: EmailAction):
     reward = float(res.reward)
     total_reward += reward
     rewards_list.append(reward)
+
     
-   
     done_val = "true" if res.done else "false"
-    print(f"[STEP] step={steps_count} action={int(action_input.action)} reward={reward:.2f} done={done_val} error=null", file=sys.stdout, flush=True)
-    sys.stdout.flush()
+    
+    action_str = f"classify({int(action_input.action)})"
+    
+    
+    print(f"[STEP] step={steps_count} action={action_str} reward={reward:.2f} done={done_val} error=null", flush=True)
     
     if res.done:
        
         final_score = float(np.tanh(total_reward / 20))
-        final_score = min(max(final_score, 0.0), 1.0)
+        final_score = min(max(final_score, 0.0), 1.0) # Clamp to [0, 1]
         
         success_val = "true" if final_score >= 0.1 else "false"
         rewards_str = ",".join(f"{r:.2f}" for r in rewards_list)
         
-        print(f"[END] success={success_val} steps={steps_count} score={final_score:.2f} rewards={rewards_str}", file=sys.stdout, flush=True)
-        sys.stdout.flush()
+      
+        print(f"[END] success={success_val} steps={steps_count} score={final_score:.2f} rewards={rewards_str}", flush=True)
         
     return res
 
 if __name__ == "__main__":
-    
+   
     port = int(os.environ.get("PORT", 7860))
-    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="error")
