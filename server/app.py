@@ -1,4 +1,5 @@
 import uvicorn
+import os
 from inference import app
 
 def main():
