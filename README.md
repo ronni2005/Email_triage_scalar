@@ -4,6 +4,7 @@ emoji: 📊
 colorFrom: gray
 colorTo: indigo
 sdk: docker
+app_port: 7860
 pinned: false
 short_description: 'RL-based email triage environment '
 ---
