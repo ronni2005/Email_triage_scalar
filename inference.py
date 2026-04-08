@@ -45,19 +45,14 @@ def reset():
 def step(action_input: EmailAction):
     global steps_count, total_reward
     
-    # 1. Agent takes action
     res = env.step(action_input)
     
-    # 2. Update tracking
     steps_count += 1
     total_reward += float(res.reward)
     
-    # 3. [STEP]
-    print(f"[STEP] step={steps_count} action={int(action_input.action)} reward={float(res.reward)}", flush=True)
-    sys.stdout.flush()
+    print(f"[STEP] step={steps_count} reward={float(res.reward)}", flush=True)
     
-    # 4. [END]
     if res.done:
-        print(f"[END] task=email_triage score={float(total_reward)} steps={int(steps_count)}", flush=True)
-        sys.stdout.flush()
+        print(f"[END] task=email_triage score={float(total_reward)} steps={steps_count}", flush=True)
+    
     return res
