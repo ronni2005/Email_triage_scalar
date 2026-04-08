@@ -1,4 +1,5 @@
 import os
+import sys
 from fastapi import FastAPI
 from env import create_env
 from agent import SmartEmailAgent
@@ -37,7 +38,7 @@ def reset():
     total_reward = 0
     
     print("[START] task=email_triage", flush=True)
-    
+    sys.stdout.flush()
     return env.reset()
 
 @app.post("/step", response_model=StepResult)
@@ -49,13 +50,14 @@ def step(action_input: EmailAction):
     
     # 2. Update tracking
     steps_count += 1
-    total_reward += res.reward
+    total_reward += float(res.reward)
     
     # 3. [STEP]
-    print(f"[STEP] step={steps_count} action={action_input.action} reward={res.reward}", flush=True)
+    print(f"[STEP] step={steps_count} action={int(action_input.action)} reward={float(res.reward)}", flush=True)
+    sys.stdout.flush()
     
     # 4. [END]
     if res.done:
-        print(f"[END] task=email_triage score={total_reward} steps={steps_count}", flush=True)
-        
+        print(f"[END] task=email_triage score={float(total_reward)} steps={int(steps_count)}", flush=True)
+        sys.stdout.flush()
     return res
