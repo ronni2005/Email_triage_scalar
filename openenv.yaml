@@ -2,7 +2,7 @@ id: email-triage-env
 name: Email Triage Environment
 version: "0.1.0"
 description: Simulates real-world email management tasks
-entrypoint: server.app:main
+entrypoint: python -u inference.py
 tasks:
   - name: easy
   - name: medium
