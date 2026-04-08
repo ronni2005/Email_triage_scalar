@@ -110,6 +110,7 @@ class EmailTriageEnv:
             info={"email_idx": idx}
         )
 
+
 def create_env(task=None):
     """
     Returns an instance of EmailTriageEnv.
