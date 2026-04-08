@@ -2,6 +2,7 @@ import os, sys, numpy as np, uvicorn
 from fastapi import FastAPI, BackgroundTasks
 from env import create_env
 from agent import SmartEmailAgent
+from models import EmailAction
 
 app = FastAPI()
 TASK_NAME = "email_triage"
@@ -29,7 +30,7 @@ def run_inference_loop():
         
         while not done:
             action_val = agent.predict(obs)
-            res = env.step(action_val)
+            res = env.step(EmailAction(action=action_val))
             steps += 1
             reward = float(res.reward)
             total_reward += reward
