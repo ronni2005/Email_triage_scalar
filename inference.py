@@ -70,5 +70,8 @@ def step(action_input: EmailAction):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))
-  
-    uvicorn.run(app, host="0.0.0.0", port=port, log_level="error")
+   
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="error")
+    except Exception as e:
+        print(f"Server error: {e}", file=sys.stderr)
